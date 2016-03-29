@@ -1,0 +1,22 @@
+{
+ "name": "package",
+ "version": "1.0.0",
+ "description": "Elancurry app",
+ "main": "server.js",
+ "scripts": {
+   "test": "echo \"Error: no test specified\" && exit 1",
+   "start": "node server.js"
+ },
+ "keywords": [
+   "Express",
+   "Mongoose"
+ ],
+ "author": "Whistle",
+ "license": "ISC",
+ "dependencies": {
+   "body-parser": "^1.14.1",
+   "nodemailer": "^0.7.1",
+   "express": "^4.13.3",
+   "mongoose": "^4.2.9"
+ }
+}
