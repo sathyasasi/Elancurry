@@ -120,7 +120,7 @@ exports.viewProfile = function(req, res, next){
   });
 }
 
-//update staff details
+//update user details
 exports.updateuser = function(req, res, next){
   var id = req.body.id;
   var name = req.body.name;

@@ -6,6 +6,7 @@ var restify = require('restify');
 var bunyan = require('bunyan');
 var loadash = require('lodash');
 var Menu = require('../models/menu.js');
+var error = require('../errors.js');
 
 //Add menu
 exports.addmenu = function(req, res, next){
@@ -29,7 +30,7 @@ Menu.find({'name': name}, function(err, menu){
 
 
 
-//update menus
+//update menu details
 exports.updatemenu = function(req, res, next){
   var id = req.body.id;
   var name = req.body.name;
@@ -48,8 +49,8 @@ exports.updatemenu = function(req, res, next){
       if(err) next(err);
       res.send(menu);
       return next();
-    })
-  })
+    });
+  });
 }
 
 
