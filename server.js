@@ -3,6 +3,14 @@ var restify = require('restify');
 var loadash = require('lodash');
 var db = require("./db.js");
 var bunyan = require('bunyan');
+var fs = require('fs');
+var path = require('path');
+var express = require('express');
+var app = express();
+app.get('/', function(req, res) {
+    res.sendFile('path-to-file');
+});
+
 var app = restify.createServer({name: 'Elancurry'});
 var routes = require('./route');
 var error = require('./errors.js');
@@ -33,6 +41,20 @@ app.on('after', function (req, res, route, error) {
   req.log.debug("%s %s", req.headers['Authorization'], req.headers['user-agent']);
   req.log.debug(req.params);
   req.log.debug("%d %s", res.statusCode, res._data ? res._data.length : null);
+});
+
+app.get('/testclient', function (req, res, next) {
+  require('fs').sendFile(__dirname + '/views/index.html', function (err, data) {
+    if (err) {
+      next(err);
+      return;
+    }
+
+    res.setHeader('Content-Type', 'text/html');
+    res.writeHead(200);
+    res.end(data);
+    next();
+  });
 });
 
 log.info("Starting up the server");
