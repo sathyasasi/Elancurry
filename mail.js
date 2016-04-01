@@ -14,14 +14,14 @@ function sendMail(to, body, name, id, callback){
 
   switch(body){
     case 0:
-      link = "http://127.0.0.1:27017/api/customer/forgotpassword/"+id
+      link = "http://elancuryy.herokuapp.com/api/user/forgotpassword/"+id
       subject = "Elancurry - Forgot Password",
       html = "Hello " + name + ", <br> Please click <a href="+ link + ">here</a> to change your password";
       break;
   }
 
   var mail = {
-      from: "Elancurry  <noreply.sasi29mca@gmail.com>",
+      from: " Sathya Sasi <sathya29mca@gmail.com>",
       to: to,
       subject: subject,
       html: html

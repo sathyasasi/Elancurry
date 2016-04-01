@@ -31,20 +31,31 @@ Purchase.findById(id,function(err,purchase){
 
 
 //purchase history
-exports.viewdatelist = function(req, res, next)
-{
- var purchaseid = req.body.purchaseid;
- //var userpurchaseid = req.body.userpurchaseid;
- Purchase.aggregate([{$match :{"purchaseid" : purchaseid}},{ $limit: 10},{$sort :{'oderRequestdate': 1 }}],function(err, purchase)
-{
+exports.viewdatelist = function(req, res, next){
+ var id = req.body._id;
+ console.log("got id");
+ Purchase.aggregate([
+   {
+     $match :
+     {
+     "_id" : id
+   }
+   },
+   {
+     $limit: 10
+   },
+   {$sort :{
+     'oderRequestdate': 1
+    }}],function(err, purchase){
+   console.log(purchase);
  if(err) return next(err);
  if(purchase != '' && purchase != null)
  {
    res.send(purchase);
    console.log("purchase detail found");
-}
+ }
  else {
-   res.send("purchase details not found");
+   res.send('purchase details not found');
    console.log("purchase details not found");
  }
 });
