@@ -5,6 +5,8 @@ var restify = require('restify');
 var bunyan = require('bunyan');
 var loadash = require('lodash');
 var Purchase = require('../models/purchase.js');
+var async = require('async');
+
 
 //adding sales details
 exports.addpurchase = function(req, res, next){
@@ -18,8 +20,7 @@ var purchase = new Purchase(req.body);
 });
 }
 
-
-//View Induv purchase
+//View Individual purchase record
 exports.viewuserPurchase = function(req, res, next){
 var id = req.params.id;
 Purchase.findById(id,function(err,purchase){
@@ -30,55 +31,31 @@ Purchase.findById(id,function(err,purchase){
 }
 
 exports.viewdatelist = function(req,res,next){
-    var purchaseid = req.body.purchaseid;
-    var customerid = req.body.customerid;
-    var oderRequestdate = req.body.oderRequestdate;
+var purchaseid = req.body.purchaseid;
+var customerid = req.body.customerid;
+
 Purchase.find({
-'purchaseid' : purchaseid
-}, 'id customerName deliveryAddress doorNo street city state pincode curry curryType curryName  purchase quantity amount oderRequestdate oderResponsedate oderStatus deliveryStatus',
+'purchaseid':purchaseid
+//'customerid':customerid
+ }, 'id customerName phone deliveryAddress doorNo street city state pincode userpurchase id curryType curryName  Buyquantity Totalprice oderRequestdate oderResponsedate oderStatus deliveredStatus',
 {
-  limit: 10,
+  limit: 3,
   sort:{
         'requestedTime': -1 //Sort by Date Added DESC
     }
 }, function(err, purchase){
   if(err){
+    console.log("err");
     res.send("error looking up for report history ");
     return next();
   } else if(!purchase){
+    console.log("not found");
     res.send("No reports found ");
     return next();
   } else {
+    console.log("purchase");
+    console.log(purchase);
     res.send(purchase);
-    return next();
-  }
-})
-}
-
-
-
-exports.viewitemlist = function(req,res,next){
-  var categoryid = req.body.categoryid;
-  var curryName = req.body.curryName;
-Category.find({
-'categoryid' : categoryid
-}, 'curry  curryType curryName',
-{
-  limit: 10,
-  sort:{
-        'requestedTime': -1 //Sort by Date Added DESC
-    }
-}, function(err, category){
-  category.curryName = curryName;
-  if(err){
-    res.send("error looking up for report history ");
-    return next();
-  } else if(!category){
-    res.send("No reports found ");
-    return next();
-  } else {
-    res.send(curry);
-    console.log(curry);
     return next();
   }
 })

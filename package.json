@@ -14,9 +14,9 @@
  "author": "Whistle",
  "license": "ISC",
  "dependencies": {
-   "body-parser": "^1.14.1",
+   "body-parser": "^1.15.0",
    "nodemailer": "^0.7.1",
-   "express": "^4.13.3",
+   "express": "^4.13.4",
    "mongoose": "^4.2.9",
    "restify": "^4.0.4",
    "bunyan": "^1.8.0",

@@ -43,20 +43,6 @@ app.on('after', function (req, res, route, error) {
   req.log.debug("%d %s", res.statusCode, res._data ? res._data.length : null);
 });
 
-app.get('/testclient', function (req, res, next) {
-  require('fs').sendFile(__dirname + '/views/index.html', function (err, data) {
-    if (err) {
-      next(err);
-      return;
-    }
-
-    res.setHeader('Content-Type', 'text/html');
-    res.writeHead(200);
-    res.end(data);
-    next();
-  });
-});
-
 log.info("Starting up the server");
 log.info("Connecting to MongoDB");
 

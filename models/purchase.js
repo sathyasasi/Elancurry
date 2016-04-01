@@ -10,7 +10,7 @@ var userpurchaseSchema = new mongoose.Schema({
   curryName:{type: String},
   Buyquantity  : {type: Number},
   Totalprice    : {type: Number},
-  oderRequestdate  : {type: Date},
+  oderRequestdate  : {type: Date, default: Date.now },
   oderResponsedate : {type: Date},
   oderStatus : {type: String,enum:oderStatus},
   deliveredStatus : {type: String,enum:deliveryStatus},
@@ -27,6 +27,7 @@ var purchaseSchema = new mongoose.Schema({
     pincode : {type: Number}
   },
   userpurchase : [userpurchaseSchema]
+//  mongoose.plugin(require('mongoose-list'));
 },{collection: 'purchase'});
 
 

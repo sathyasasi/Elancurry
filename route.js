@@ -23,7 +23,8 @@ app.post('/api/viewdatelist',reports.viewdatelist);
 app.post('/api/viewitemlist',reports.viewitemlist);
 app.post('/api/addmenu',menu.addmenu);
 app.post('/api/updatemenu',menu.updatemenu);
-app.post('/api/viewmenu',menu.viewmenu);
-app.del('/api/menu/delete',menu.deletemenu);
+app.get('/api/viewmenu/:id',menu.viewmenu);
+app.del('/api/deletemenu/:id',menu.deletemenu);
 app.get('/api/user/purchase/:id',reports.viewuserPurchase);
+app.post('/api/purchaselist',reports.purchaseList);
 }

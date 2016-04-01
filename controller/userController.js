@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var restify = require('restify');
 var bunyan = require('bunyan');
 var loadash = require('lodash');
+var express = require('express');
 var User = require('../models/user.js');
 var error = require('../errors.js');
 var common = require('../common.js').response;
@@ -22,7 +23,6 @@ exports.signupuser = function(req, res, next){
     return next();
   }
 }
-
 if(typeof registeringUser.email == 'undefined' || registeringUser.email == ''){
     res.send('email is missing');
     return next();
@@ -215,7 +215,7 @@ exports.changePassword = function(req,res,next){
  });
 }
 
-
+//Logout user
 exports.logout = function(req,res,next){
   var id = req.params.id;
   User.findById(id,function(err,user){
