@@ -16,7 +16,7 @@ exports.addmenu = function(req, res, next){
    var name = req.body.name;
    Menu.find({"name": name}, function(err, menu){
     if(menu != null && menu != ""){
-    res.send("User already exists this menu item");
+    res.send("already exists this menu item");
     }
     else {
       jsonHelper.getMenuModel(req.body, function(newMenu){
