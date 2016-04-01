@@ -20,11 +20,9 @@ app.get('/api/user/viewprofile/:id',userController.viewProfile);
 app.post('/api/userupdate',userController.updateuser);
 app.post('/api/addpurchase',reports.addpurchase);
 app.post('/api/viewdatelist',reports.viewdatelist);
-app.post('/api/viewitemlist',reports.viewitemlist);
 app.post('/api/addmenu',menu.addmenu);
 app.post('/api/updatemenu',menu.updatemenu);
 app.get('/api/viewmenu/:id',menu.viewmenu);
 app.del('/api/deletemenu/:id',menu.deletemenu);
 app.get('/api/user/purchase/:id',reports.viewuserPurchase);
-app.post('/api/purchaselist',reports.purchaseList);
 }
