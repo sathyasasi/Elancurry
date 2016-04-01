@@ -5,7 +5,6 @@ var restify = require('restify');
 var bunyan = require('bunyan');
 var loadash = require('lodash');
 var Purchase = require('../models/purchase.js');
-var async = require('async');
 
 
 //adding sales details
@@ -36,7 +35,7 @@ var customerid = req.body.customerid;
 
 Purchase.find({
 'purchaseid':purchaseid
-//'customerid':customerid
+
  }, 'id customerName phone deliveryAddress doorNo street city state pincode userpurchase id curryType curryName  Buyquantity Totalprice oderRequestdate oderResponsedate oderStatus deliveredStatus',
 {
   limit: 3,
