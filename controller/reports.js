@@ -29,33 +29,23 @@ Purchase.findById(id,function(err,purchase){
 });
 }
 
-exports.viewdatelist = function(req,res,next){
-var purchaseid = req.body.purchaseid;
-var customerid = req.body.customerid;
 
-Purchase.find({
-'purchaseid':purchaseid
-
- }, 'id customerName phone deliveryAddress doorNo street city state pincode userpurchase id curryType curryName  Buyquantity Totalprice oderRequestdate oderResponsedate oderStatus deliveredStatus',
+//purchase history
+exports.viewdatelist = function(req, res, next)
 {
-  limit: 3,
-  sort:{
-        'requestedTime': -1 //Sort by Date Added DESC
-    }
-}, function(err, purchase){
-  if(err){
-    console.log("err");
-    res.send("error looking up for report history ");
-    return next();
-  } else if(!purchase){
-    console.log("not found");
-    res.send("No reports found ");
-    return next();
-  } else {
-    console.log("purchase");
-    console.log(purchase);
-    res.send(purchase);
-    return next();
-  }
-})
+ var purchaseid = req.body.purchaseid;
+ //var userpurchaseid = req.body.userpurchaseid;
+ Purchase.aggregate([{$match :{"purchaseid" : purchaseid}},{ $limit: 10},{$sort :{'oderRequestdate': 1 }}],function(err, purchase)
+{
+ if(err) return next(err);
+ if(purchase != '' && purchase != null)
+ {
+   res.send(purchase);
+   console.log("purchase detail found");
+}
+ else {
+   res.send("purchase details not found");
+   console.log("purchase details not found");
+ }
+});
 }
