@@ -10,5 +10,5 @@ exports.error = function(error, req, res){
     'status': 'Error',
       'code': 400,
       'errors': error
-  }); 
+  });
 }

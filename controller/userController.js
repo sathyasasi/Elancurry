@@ -62,7 +62,7 @@ if(typeof registeringUser.email == 'undefined' || registeringUser.email == ''){
                   user.password = '';
                   JSON.stringify(user);
                   console.log(user);
-                  res.send(user);
+                   res.send(user);
                   return next();
                 }
               });
