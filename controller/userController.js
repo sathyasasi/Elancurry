@@ -84,7 +84,7 @@ exports.loginuser = function(req, res, next){
       return next();
     }
 
-  User.findOne({ $or:[{'phone': user.phone},{'email': user.email},{'customerId': user.password}]}, function(err, user){
+  User.findOne({ $or:[{'phone': user.phone},{'customerId': user.password}]}, function(err, user){
     if(err){
       res.send('error lookingup user');
       return next();
