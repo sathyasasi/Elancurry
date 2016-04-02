@@ -5,8 +5,6 @@ var db = require("./db.js");
 var bunyan = require('bunyan');
 var fs = require('fs');
 var path = require('path');
-var express = require('express');
-var bodyParser = require('body-parser');
 
 
 var app = restify.createServer({name: 'Elancurry'});
@@ -14,28 +12,15 @@ var routes = require('./route');
 var error = require('./errors.js');
 
 app.use(restify.acceptParser(app.acceptable));
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 app.use(restify.queryParser());
 app.use(restify.bodyParser());
 
-// Add headers
-app.use(function (req, res, next) {
 
-    // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-
-    // Request methods you wish to allow
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-
-    // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-
-    // Set to true if you need the website to include cookies in the requests sent
-    // to the API (e.g. in case you use sessions)
-    res.setHeader('Access-Control-Allow-Credentials', true);
-
-    // Pass to next layer of middleware
-    next();
-});
 
 // Create a bunyan based logger
 var log = bunyan.createLogger({
