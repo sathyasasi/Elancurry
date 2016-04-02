@@ -10,35 +10,52 @@ var Purchase = require('../models/purchase.js');
 //adding sales details
 exports.addpurchase = function(req, res, next){
 var purchase = new Purchase(req.body);
- purchase.save(function(err, purchase) {
- if(err) return next(err);
- console.log("sales details added");
-  res.send(purchase);
-  console.log(purchase);
- return next();
-});
+var phone = req.body.phone;
+
+   Purchase.find({"phone": phone}, function(err, menu){
+    if(menu != null && menu != ""){
+       if(err) return next(err);
+    res.send("already exists phone number");
+    }
+else{
+  purchase.save(function(err, purchase) {
+  console.log("sales details added");
+   res.send(purchase);
+   console.log(purchase);
+  return next();
+ });
+}
+ });
 }
 
 //View Individual purchase record
 exports.viewuserPurchase = function(req, res, next){
 var id = req.params.id;
 Purchase.findById(id,function(err,purchase){
-  if (err) return next(err);
-  res.send(purchase);
-  return next();
+  if(purchase !=null && purchase != "")
+  {
+    if(err) return next(err);
+    res.send(purchase);
+    return next();
+  }
+  else{
+    res.send('Not exist purchase');
+    return next();
+  }
+
 });
 }
 
 
 //purchase history
 exports.viewdatelist = function(req, res, next){
- var id = req.body._id;
+ var id = req.body.id;
  console.log("got id");
  Purchase.aggregate([
    {
      $match :
      {
-     "_id" : id
+     "id" : id
    }
    },
    {

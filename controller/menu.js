@@ -23,6 +23,7 @@ exports.addmenu = function(req, res, next){
         newMenu.save(function(err, menu){
          if(err) return next(err);
           res.send(menu);
+          return next();
         });
       });
     }
@@ -57,9 +58,15 @@ exports.updatemenu = function(req, res, next){
 exports.viewmenu = function(req, res, next){
 var id = req.params.id;
 Menu.findById(id,function(err,menu){
-  if (err) return next(err);
-  res.send(menu);
+  if(menu != null && menu != ""){
+    if (err) return next(err);
+    res.send(menu);
+    return next();
+  }
+else{
+  res.send('Not exist menu item');
   return next();
+}
 });
 }
 

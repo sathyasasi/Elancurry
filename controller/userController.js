@@ -114,9 +114,15 @@ exports.loginuser = function(req, res, next){
 exports.viewProfile = function(req, res, next){
   var id = req.params.id;
   User.findById(id,function(err,user){
-    if (err) return next(err);
-    res.send(user);
-    return next();
+    if(user != null && user != ""){
+      res.send(user);
+      return next();
+    }
+    else{
+      res.send('invalid user');
+      return next();
+    }
+
   });
 }
 
@@ -191,7 +197,7 @@ exports.sendPasswordFile = function(req, res, next) {
     return next();
   }
   else {
-    res.send("Sorry ,You are not an authorised user");
+    res.status(200).send("Sorry ,You are not an authorised user");
     return next();
   }
 });
@@ -202,17 +208,22 @@ exports.changePassword = function(req,res,next){
  var id = req.body.id;
  var password = req.body.password;
  User.findById(id,function(err, user){
- if(err) return next(err);
- user.password = password;
- user.save(function(err, user)
-   {
-    if(err) throw err;
-     console.log(user.name);
-     res.send("Password Successfully resetted"+ user.password);
-     console.log(user.password);
-     return next();
-   });
- });
+   if(user != null && user != ""){
+     user.password = password;
+     user.save(function(err, user)
+       {
+        if(err) return next(err);
+         console.log(user.name);
+         res.send("Password Successfully resetted"+ user.password);
+         console.log(user.password);
+         return next();
+       });
+      }
+   else {
+   res.send("Invalid user");
+   return next();
+ }
+});
 }
 
 //Logout user

@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var bodyParser = require('body-parser');
+
 
 var category = ["Mutton","Chicken","Fish"];
 var deliveryStatus = ["Success","Failed" ];

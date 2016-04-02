@@ -6,16 +6,12 @@ var bunyan = require('bunyan');
 var fs = require('fs');
 var path = require('path');
 var express = require('express');
-var app = express();
-app.get('/', function(req, res) {
-    res.sendFile('path-to-file');
-});
+var bodyParser = require('body-parser');
+
 
 var app = restify.createServer({name: 'Elancurry'});
 var routes = require('./route');
 var error = require('./errors.js');
-
-
 
 app.use(restify.acceptParser(app.acceptable));
 app.use(restify.queryParser());
