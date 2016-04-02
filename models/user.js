@@ -8,14 +8,7 @@ var userSchema = new mongoose.Schema({
   email     : {type: String, required: true ,unique: true},
   phone     : {type: String, required: true, unique: true},
   password  : {type: String, required: true},
-  address   :
-    {
-      doorNo  : {type: String},
-      street  : {type: String},
-      city    : {type: String},
-      state   : {type: String},
-      pincode : {type: Number},
-    },
+  address   : {type: String},
   status    : {type:String,enum:statustypes},
   createdAt : {type: Date,default: Date.now},
   updatedAt : {type: Date}
