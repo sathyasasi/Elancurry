@@ -14,55 +14,55 @@ var mail = require('../mail.js');
 exports.signupuser = function(req, res, next){
   var registeringUser = req.body.user;
   if(typeof registeringUser.phone == 'undefined' || registeringUser.phone == ''){
-  res.send('phone is missing');
+  res.status(200).send('phone is missing');
   return next();
 } else {
   var phone = registeringUser.phone;
   if(phone.substr(0, 3) != '+91' && phone.split(phone.substr(0, 3))[1].length != 10) {
-    res.send('Phone number should belong to India.');
+    res.status(200).send('Phone number should belong to India.');
     return next();
   }
 }
 if(typeof registeringUser.email == 'undefined' || registeringUser.email == ''){
-    res.send('email is missing');
+    res.status(200).send('email is missing');
     return next();
   }
 
   User.findOne({'phone': registeringUser.phone}, function(err, user){
     if(err){
-    res.send('error lookingup phone');
+    res.status(200).send('error lookingup phone');
     return next(); }
     if(user){
-     res.send('phone already exists');
+     res.status(200).send('phone already exists');
       return next();
     } else if(!user){
 
       User.findOne({'email': registeringUser.email}, function(err, user){
         if(err){
-        res.send('error lookingup email');
+        res.status(200).send('error lookingup email');
         return next(); }
         if(user){
-          res.send('email already exists');
+          res.status(200).send('email already exists');
           return next();
         } else if(!user){
           registeringUser.status = 'Active';
           User.create(registeringUser, function(err, loggedInUser){
             if(err) error.processError(err, req, res);
             if(!loggedInUser){
-              res.send('error saving in user');
+              res.status(200).send('error saving in user');
               return next();
             }
             if(loggedInUser){
               loggedInUser.save(function(err, user){
                 if(err){
                   console.log("err");
-                  res.send('error logging in user');
+                  res.status(200).send('error logging in user');
                   return next();
                 } else if(user){
                   user.password = '';
                   JSON.stringify(user);
                   console.log(user);
-                   res.send(user);
+                   res.status(200).send(user);
                   return next();
                 }
               });
@@ -80,28 +80,28 @@ exports.loginuser = function(req, res, next){
   var password = user.password;
 
   if((typeof user.email == 'undefined' && user.email == '') || (typeof user.phone == 'undefined' && user.phone == '') || (typeof user.password == 'undefined' && user.password == '')){
-      res.send('login Id is missing');
+      res.status(200).send('login Id is missing');
       return next();
     }
 
   User.findOne({ $or:[{'phone': user.phone},{'customerId': user.password}]}, function(err, user){
     if(err){
-      res.send('error lookingup user');
+      res.status(200).send('error lookingup user');
       return next();
     } else if(!user) {
-      res.send('No customer exists');
+      res.status(200).send('No customer exists');
       return next();
     } else if(user){
         if (password !== user.password) {
-          res.send('Password is wrong');
+          res.status(200).send('Password is wrong');
           return next();
         } else {
         user.save(function(err, customer){
           if(err){
-            res.send('error logging in customer');
+            res.status(200).send('error logging in customer');
             return next();
           } else if(user){
-            res.send(user);
+            res.status(200).send(user);
             return next();
           }
         });
@@ -115,11 +115,11 @@ exports.viewProfile = function(req, res, next){
   var id = req.params.id;
   User.findById(id,function(err,user){
     if(user != null && user != ""){
-      res.send(user);
+      res.status(200).send(user);
       return next();
     }
     else{
-      res.send('invalid user');
+      res.status(200).send('invalid user');
       return next();
     }
 
@@ -153,7 +153,7 @@ exports.updateuser = function(req, res, next){
 
    user.save(function(err, user){
      if(err) next(err);
-       res.send(user);
+       res.status(200).send(user);
        return next();
      });
    });
@@ -165,20 +165,20 @@ var email = req.params.email;
 console.log(email);
 User.findOne({'email':email}, function(err, user){
   if(err){
-    res.send('Error looking up for email');
+    res.status(200).send('Error looking up for email');
     return next();
   } else if(user) {
     mail.sendMail(user.email, 0, user.name, user._id, function(result){
         if(result == 1){
-          res.send('Error sending mail');
+          res.status(200).send('Error sending mail');
           return next();
         } else {
-        res.send('Mail Sent');
+        res.status(200).send('Mail Sent');
         return next();
       }
       });
   } else {
-    res.send('No user found');
+    res.status(200).send('No user found');
     return next();
   }
 })
@@ -192,7 +192,7 @@ exports.sendPasswordFile = function(req, res, next) {
   User.findById(id,function(err, user){
     if(user != null && user != ""){
     console.log(link);
-    res.sendFile(path.resolve(__dirname, '../views', 'index.html'));
+    res.status(200).sendFile(path.resolve(__dirname, '../views', 'index.html'));
     console.log("sendfile");
     return next();
   }
@@ -214,13 +214,13 @@ exports.changePassword = function(req,res,next){
        {
         if(err) return next(err);
          console.log(user.name);
-         res.send("Password Successfully resetted"+ user.password);
+         res.status(200).send("Password Successfully resetted"+ user.password);
          console.log(user.password);
          return next();
        });
       }
    else {
-   res.send("Invalid user");
+   res.status(200).send("Invalid user");
    return next();
  }
 });
@@ -231,11 +231,11 @@ exports.logout = function(req,res,next){
   var id = req.params.id;
   User.findById(id,function(err,user){
     if(user!= null && user!= ""){
-       res.send("Logged out Successfully");
+       res.status(200).send("Logged out Successfully");
        return next();
      }
      else {
-       res.send("Invalid User");
+       res.status(200).send("Invalid User");
        return next();
      }
   });
