@@ -72,7 +72,7 @@ if(typeof registeringUser.email == 'undefined' || registeringUser.email == ''){
 
 exports.loginuser = function(req, res, next){
   var user = req.body.user;
-  var password = user.password;
+  var cpassword = user.cpassword;
 
   if(typeof user.phone == 'undefined' || user.phone == ''){
     res.send('phone is missing');
@@ -85,13 +85,13 @@ exports.loginuser = function(req, res, next){
     }
   }
 
-  if(typeof user.password == 'undefined' || user.password == ''){
+  if(typeof user.cpassword == 'undefined' || user.cpassword == ''){
       res.send('password is missing');
       return next();
     }
 
 
-  User.findOne({'phone': user.phone}  || {'password': user.password}, function(err, user){
+  User.findOne({'phone': user.phone}  || {'cpassword': user.cpassword}, function(err, user){
     if(err){
       res.send('error lookingup user');
       return next();
@@ -99,7 +99,7 @@ exports.loginuser = function(req, res, next){
       res.send('No user exists');
       return next();
     } else if(user){
-          if (password !== user.password) {
+          if (cpassword !== user.cpassword) {
           res.send('Password is wrong');
           return next();
         } else {
