@@ -1,4 +1,5 @@
-exports.response = function(data){
+exports.response = function(status,data){
+  this.status = status;
   this.data = data;
 }
 
@@ -11,4 +12,10 @@ exports.error = function(error, req, res){
       'code': 400,
       'errors': error
   });
+}
+
+exports.respondWithData = function(data){
+  //this.data = data;
+  //this.status = status;
+  this.data = data;
 }

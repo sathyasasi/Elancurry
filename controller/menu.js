@@ -6,10 +6,10 @@ var bunyan = require('bunyan');
 var loadash = require('lodash');
 var express = require('express');
 var Menu = require('../models/menu.js');
-var error = require('../errors.js');
-var jsonHelper = require("../helpers/json.js");
-var common = require('../common.js').response;
-
+var Response = require('../helpers/response.js');
+var error = require('../helpers/errors.js');
+var common = require('../helpers/common.js');
+var mail = require('../helpers/mail.js');
 
 //Add menu
 exports.addmenu = function(req, res, next){

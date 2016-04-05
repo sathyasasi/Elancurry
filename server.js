@@ -1,26 +1,41 @@
 //Modules
 var restify = require('restify');
-var loadash = require('lodash');
-var db = require("./db.js");
-var bunyan = require('bunyan');
-var fs = require('fs');
-var path = require('path');
+var  _ = require('lodash');
+var  bunyan = require('bunyan');
+var  path = require('path');
+var  db = require("./db.js");
 
-
-var app = restify.createServer({name: 'Elancurry'});
-var routes = require('./route');
-var error = require('./errors.js');
-
+var app = restify.createServer({name: 'Server'});
 app.use(restify.acceptParser(app.acceptable));
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
+
+// Use domain to catch exceptions
+/*app.use(function (req, res, next) {
+  var d = domain.create();
+  domain.active = d;
+  d.add(req);
+  d.add(res);
+
+  d.on('error', function (err) {
+    console.error("Error: " + err.stack);
+    res.send(500, err);
+    next(err);
+  });
+
+  res.on('end', function () {
+    d.dispose();
+  });
+
+  d.run(next);
+});*/
+
+
 app.use(restify.queryParser());
 app.use(restify.bodyParser());
-
-
 
 // Create a bunyan based logger
 var log = bunyan.createLogger({
@@ -44,6 +59,26 @@ app.on('after', function (req, res, route, error) {
   req.log.debug("%d %s", res.statusCode, res._data ? res._data.length : null);
 });
 
+/*app.get('/testclient', function (req, res, next) {
+  require('fs').readFile(__dirname + '/public/index.html', function (err, data) {
+    if (err) {
+      next(err);
+      return;
+    }
+
+    res.setHeader('Content-Type', 'text/html');
+    res.writeHead(200);
+    res.end(data);
+    next();
+  });
+});*/
+
+
+app.get('/' + process.env.LOADERIO_TOKEN + '.txt', function (req, res) {
+  res.setHeader('Content-Type', 'text/plain');
+  return res.send(process.env.LOADERIO_TOKEN);
+});
+
 log.info("Starting up the server");
 log.info("Connecting to MongoDB");
 
@@ -56,6 +91,7 @@ function start(cb) {
   var m = db.connect(function (err) {
     if (err) {
       throw err;
+      log.info(err);
       process.exit(-1);
     }
 
@@ -71,7 +107,7 @@ function start(cb) {
       });
       require("./route")(app);
 
-      app.listen(process.env.PORT || 3000, function (err) {
+      app.listen(process.env.PORT || 8000, function (err) {
         log.info(" %s listening at %s", app.name, app.url);
         cb(err);
       });

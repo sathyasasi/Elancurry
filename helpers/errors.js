@@ -2,7 +2,7 @@
  * Translate mongoose errors to restify errors
  */
 
-exports.processError = function (error, req, res) {
+exports.processError = function (error, req, res, next) {
   // processing mongoose validation errors
   //http://mongoosejs.com/docs/validation.html
   if (error.name === 'ValidationError') {
