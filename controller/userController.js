@@ -56,7 +56,7 @@ if(typeof registeringUser.email == 'undefined' || registeringUser.email == ''){
                   res.send('error logging in user');
                   return next();
                 } else if(user){
-                  user.password = '';
+                  //user.password = '';
                   JSON.stringify(user);
                   res.send(new Response.respondWithData(user));
                   return next();
