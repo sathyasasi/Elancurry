@@ -4,10 +4,7 @@ var bodyParser = require('body-parser');
 var User = require('../models/user');
 var Response = require('../helpers/response.js');
 var mail = require('../helpers/mail.js');
-var express = require('express');
-var app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+
 
 
 exports.signupuser = function(req, res, next){
@@ -32,7 +29,8 @@ if(typeof registeringUser.email == 'undefined' || registeringUser.email == ''){
   User.findOne({'phone': registeringUser.phone}, function(err, user){
     if(err){
     res.send('error lookingup phone');
-    return next(); }
+    return next();
+  }
     if(user){
       res.send('phone already exists');
       return next();
@@ -88,7 +86,7 @@ exports.loginuser = function(req, res, next){
   }
 
   if(typeof user.password == 'undefined' || user.password == ''){
-      res.send('email is missing');
+      res.send('password is missing');
       return next();
     }
 
@@ -217,7 +215,7 @@ exports.changePassword = function(req, res, next){
    {
     if(err) throw err;
      console.log(user.name);
-     res.send("Password Successfully resetted"+ user.password);
+     res.status(200).send("Password Successfully resetted"+ user.password);
      console.log(user.password);
      return next();
    });
