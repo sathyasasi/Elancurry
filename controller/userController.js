@@ -196,7 +196,7 @@ User.findOne({'email':email}, function(err, user){
 //sending the password file
 exports.sendPasswordFile = function(req, res, next) {
   var id = req.params.id;
-  var link = "http://elancuryy.herokuapp.com/api/user/forgotpassword/"+id;
+  var link = "http://127.0.0.1:52320/api/user/forgotpassword/"+id;
   User.findById(id,function(err, user){
     if(user != null && user != ""){
     console.log(link);
