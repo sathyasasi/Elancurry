@@ -1,11 +1,13 @@
 var mongoose = require('mongoose');
 var path = require('path');
 var bodyParser = require('body-parser');
-var User = require('../models/user.js');
+var restify = require('restify');
+var bunyan = require('bunyan');
 var Response = require('../helpers/response.js');
 var error = require('../helpers/errors.js');
 var common = require('../helpers/common.js');
 var mail = require('../helpers/mail.js');
+var User = require('../models/user.js');
 var express = require('express');
 var app = express();
 
@@ -214,17 +216,19 @@ exports.sendPasswordFile = function(req, res, next) {
 
 
 //Resetting Password
-exports.changePassword = function(req, res, next){
- var id = req.body._id;
+exports.changePassword = function(req,res,next){
+ var id = req.body.id;
  var password = req.body.password;
+ console.log("got");
  User.findById(id,function(err, user){
  if(err) return next(err);
+ console.log("got1")
  user.password = password;
  user.save(function(err, user)
    {
     if(err) throw err;
      console.log(user.name);
-     res.status(200).send("Password Successfully resetted"+ user.password);
+     res.send("Password Successfully resetted"+ user.password);
      console.log(user.password);
      return next();
    });
