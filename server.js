@@ -4,7 +4,7 @@ var  _ = require('lodash');
 var  bunyan = require('bunyan');
 var  path = require('path');
 var  db = require("./db.js");
-var domain = require('domain');
+//var domain = require('domain');
 
 var app = restify.createServer({name: 'Server'});
 app.use(restify.acceptParser(app.acceptable));
@@ -15,7 +15,7 @@ app.use(function(req, res, next) {
 });
 
 // Use domain to catch exceptions
-app.use(function (req, res, next) {
+/*app.use(function (req, res, next) {
   var d = domain.create();
   domain.active = d;
   d.add(req);
@@ -32,7 +32,7 @@ app.use(function (req, res, next) {
   });
 
   d.run(next);
-});
+});*/
 
 
 app.use(restify.queryParser());
