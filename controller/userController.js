@@ -18,55 +18,56 @@ exports.signupuser = function(req, res, next){
   var registeringUser = req.body.user;
 
   if(typeof registeringUser.phone == 'undefined' || registeringUser.phone == ''){
-  res.send('phone is missing');
+  res.send(400,{user:'phone is missing'});
   return next();
 } else {
   var phone = registeringUser.phone;
   if(phone.substr(0, 3) != '+91' && phone.split(phone.substr(0, 3))[1].length != 10) {
-    res.send('Phone number should belong to India.');
+    res.send(400,{user:'Phone number should belong to India.'});
     return next();
   }
 }
 
 if(typeof registeringUser.email == 'undefined' || registeringUser.email == ''){
-    res.send('email is missing');
+    res.send(400,{user:'email is missing'});
     return next();
   }
 
   User.findOne({'phone': registeringUser.phone}, function(err, user){
     if(err){
-    res.send('error lookingup phone');
+    res.send(400,{user:'error lookingup phone'});
     return next();
   }
     if(user){
-      res.send('phone already exists');
+      res.send(400,{user:'phone already exists'});
       return next();
     } else if(!user){
       User.findOne({'email': registeringUser.email}, function(err, user){
         if(err){
-        res.send('error lookingup email');
+        res.send(400,{user:'error lookingup email'});
         return next(); }
         if(user){
-          res.send('email already exists');
+          res.send(400,{user:'email already exists'});
           return next();
         } else if(!user){
           registeringUser.status = 'Active';
           User.create(registeringUser, function(err, loggedInUser){
             if(err) error.processError(err, req, res);
             if(!loggedInUser){
-              res.send('error saving in user');
+              res.send(400,{user:'error saving in user'});
               return next();
             }
             if(loggedInUser){
               loggedInUser.save(function(err, user){
                 if(err){
-                  res.send('error logging in user');
+                  res.send(400,{user:'error logging in user'});
                   return next();
                 } else if(user){
                   //user.password = '';
                   //user.updatedAt = '';
                   JSON.stringify(user);
-                  res.send(new Response.respondWithData(user));
+                  res.send(200,{user: user});
+                  //res.send(new Response.respondWithData(user));
                   return next();
                 }
               });
@@ -80,44 +81,48 @@ if(typeof registeringUser.email == 'undefined' || registeringUser.email == ''){
 
 exports.loginuser = function(req, res, next){
   var user = req.body.user;
+  var phone = req.body.phone;
   var password = user.password;
 
   if(typeof user.phone == 'undefined' || user.phone == ''){
-    res.send('phone is missing');
+    res.send(400,{user:'phone is missing'});
     return next();
   } else {
     var phone = user.phone;
     if(phone.substr(0, 3) != '+91' && phone.split(phone.substr(0, 3))[1].length != 10) {
-      res.send('Phone number should belong to India.');
+      res.send(400,{user:'Phone number should belong to India.'});
       return next();
     }
   }
 
 if(typeof user.password == 'undefined' || user.password == ''){
-      res.send('password is missing');
+      res.send(400,{user:'password is missing'});
       return next();
     }
 
 
   User.findOne({'phone': user.phone}  || {'password': user.password}, function(err, user){
     if(err){
-      res.send('error lookingup user');
+      res.send(400,{user:'error lookingup user'});
       return next();
     } else if(!user) {
-      res.send('No user exists');
+      res.send(400,{user:'No user exists'});
       return next();
     } else if(user){
           //var existing = common.decrypt(user.password);
           if (password !== user.password) {
-          res.send('Password is wrong');
+              console.log(Response.statusCode);
+          res.send(400,{user:'Password is wrong'});
           return next();
         } else {
         user.save(function(err, user){
           if(err){
-            res.send('error logging in user');
+            res.send(400,{user:'error logging in user'});
             return next();
           } else if(user){
-            res.send(new Response.respondWithData(user));
+            console.log(Response.statusCode);
+              res.send(200,{user: user});
+              //res.send(new Response.respondWithData(user));
             return next();
           }
         });
@@ -132,11 +137,11 @@ exports.viewProfile = function(req, res, next){
  var id = req.params.id;
  User.findById(id,function(err,user){
    if(user != null && user != ""){
-     res.send(user);
+     res.send(200,{user: user});
      return next();
    }
    else{
-     res.send('invalid user');
+     res.send(400,{user:'invalid user'});
      return next();
    }
 
@@ -160,7 +165,7 @@ exports.updateuser = function(req, res, next){
 
    user.save(function(err, user){
      if(err) next(err);
-       res.send(user);
+       res.send(200,{user: user});
        return next();
      });
    });
@@ -200,10 +205,18 @@ exports.sendPasswordFile = function(req, res, next) {
   User.findById(id,function(err, user){
     if(user != null && user != ""){
     console.log(link);
-    app.get('/',function(req, res){
-  res.sendfile(path.join(__dirname+'/index.html'));
-});
+  /*  app.get('/',function(req, res){
+  res.sendFile(path.join(__dirname+'/index.html'));
+});*/
     //res.sendFile(path.resolve(__dirname, '../views', 'index.html'));
+    console.log("got1");
+    //res.sendfile(path.join(__dirname + '../views/index.html'));
+    //res.sendfile('views/index1.html');
+    // res.sendFile('index.html', { root: path.join(__dirname, '../views') });
+     res.sendFile('views/index.html' , { root : __dirname});
+    //res.sendfile(__dirname + '/index.html');
+    console.log("got2");
+    console.log(user);
     console.log("sendfile");
     return next();
   }
@@ -219,16 +232,14 @@ exports.sendPasswordFile = function(req, res, next) {
 exports.changePassword = function(req,res,next){
  var id = req.body.id;
  var password = req.body.password;
- console.log("got");
  User.findById(id,function(err, user){
  if(err) return next(err);
- console.log("got1")
  user.password = password;
  user.save(function(err, user)
    {
     if(err) throw err;
      console.log(user.name);
-     res.send("Password Successfully resetted"+ user.password);
+     res.send(200, {user: "Password Successfully resetted"+ user.password});
      console.log(user.password);
      return next();
    });
