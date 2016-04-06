@@ -1,9 +1,14 @@
 var mongoose = require('mongoose');
 var path = require('path');
 var bodyParser = require('body-parser');
-var User = require('../models/user');
+var User = require('../models/user.js');
 var Response = require('../helpers/response.js');
+var error = require('../helpers/errors.js');
+var common = require('../helpers/common.js');
 var mail = require('../helpers/mail.js');
+var express = require('express');
+var app = express();
+
 
 
 
@@ -57,6 +62,7 @@ if(typeof registeringUser.email == 'undefined' || registeringUser.email == ''){
                   return next();
                 } else if(user){
                   //user.password = '';
+                  //user.updatedAt = '';
                   JSON.stringify(user);
                   res.send(new Response.respondWithData(user));
                   return next();
@@ -72,7 +78,7 @@ if(typeof registeringUser.email == 'undefined' || registeringUser.email == ''){
 
 exports.loginuser = function(req, res, next){
   var user = req.body.user;
-  var cpassword = user.cpassword;
+  var password = user.password;
 
   if(typeof user.phone == 'undefined' || user.phone == ''){
     res.send('phone is missing');
@@ -85,13 +91,13 @@ exports.loginuser = function(req, res, next){
     }
   }
 
-  if(typeof user.cpassword == 'undefined' || user.cpassword == ''){
+if(typeof user.password == 'undefined' || user.password == ''){
       res.send('password is missing');
       return next();
     }
 
 
-  User.findOne({'phone': user.phone}  || {'cpassword': user.cpassword}, function(err, user){
+  User.findOne({'phone': user.phone}  || {'password': user.password}, function(err, user){
     if(err){
       res.send('error lookingup user');
       return next();
@@ -99,7 +105,8 @@ exports.loginuser = function(req, res, next){
       res.send('No user exists');
       return next();
     } else if(user){
-          if (cpassword !== user.cpassword) {
+          //var existing = common.decrypt(user.password);
+          if (password !== user.password) {
           res.send('Password is wrong');
           return next();
         } else {
@@ -135,8 +142,8 @@ exports.viewProfile = function(req, res, next){
 }
 //update user details
 exports.updateuser = function(req, res, next){
-  var id = req.body.id;
-  var name = req.body.name;
+
+ var id = req.body.id;
   var email = req.body.email;
   var phone = req.body.phone;
   var address = req.body.address;
@@ -148,6 +155,7 @@ exports.updateuser = function(req, res, next){
    user.phone = phone;
    user.address = address;
 
+
    user.save(function(err, user){
      if(err) next(err);
        res.send(user);
@@ -155,6 +163,7 @@ exports.updateuser = function(req, res, next){
      });
    });
 }
+
 
 //Forgot password
 exports.forgotPassword = function(req, res, next){
@@ -190,7 +199,7 @@ exports.sendPasswordFile = function(req, res, next) {
     if(user != null && user != ""){
     console.log(link);
     app.get('/',function(req, res){
-  res.sendFile(path.join(__dirname+'/index.html'));
+  res.sendfile(path.join(__dirname+'/index.html'));
 });
     //res.sendFile(path.resolve(__dirname, '../views', 'index.html'));
     console.log("sendfile");

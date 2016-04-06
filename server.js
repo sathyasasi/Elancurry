@@ -4,6 +4,7 @@ var  _ = require('lodash');
 var  bunyan = require('bunyan');
 var  path = require('path');
 var  db = require("./db.js");
+var domain = require('domain');
 
 var app = restify.createServer({name: 'Server'});
 app.use(restify.acceptParser(app.acceptable));
@@ -14,7 +15,7 @@ app.use(function(req, res, next) {
 });
 
 // Use domain to catch exceptions
-/*app.use(function (req, res, next) {
+app.use(function (req, res, next) {
   var d = domain.create();
   domain.active = d;
   d.add(req);
@@ -31,7 +32,7 @@ app.use(function(req, res, next) {
   });
 
   d.run(next);
-});*/
+});
 
 
 app.use(restify.queryParser());
@@ -59,7 +60,7 @@ app.on('after', function (req, res, route, error) {
   req.log.debug("%d %s", res.statusCode, res._data ? res._data.length : null);
 });
 
-/*app.get('/testclient', function (req, res, next) {
+app.get('/testclient', function (req, res, next) {
   require('fs').readFile(__dirname + '/public/index.html', function (err, data) {
     if (err) {
       next(err);
@@ -71,7 +72,7 @@ app.on('after', function (req, res, route, error) {
     res.end(data);
     next();
   });
-});*/
+});
 
 
 app.get('/' + process.env.LOADERIO_TOKEN + '.txt', function (req, res) {
