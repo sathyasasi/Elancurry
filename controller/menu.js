@@ -16,13 +16,13 @@ exports.addmenu = function(req, res, next){
    var name = req.body.name;
    Menu.find({"name": name}, function(err, menu){
     if(menu != null && menu != ""){
-    res.send("already exists this menu item");
+    res.send(400,{menu:'already exists this menu item'});
     }
     else {
       jsonHelper.getMenuModel(req.body, function(newMenu){
         newMenu.save(function(err, menu){
          if(err) return next(err);
-          res.send(menu);
+          res.send(200,{menu: menu});
           return next();
         });
       });
@@ -47,7 +47,7 @@ exports.updatemenu = function(req, res, next){
     menu.image = image;
     menu.save(function(err, menu){
       if(err) next(err);
-      res.send(menu);
+      res.send(200, {menu: menu});
       return next();
     });
   });

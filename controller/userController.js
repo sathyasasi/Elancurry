@@ -149,25 +149,45 @@ exports.viewProfile = function(req, res, next){
 }
 //update user details
 exports.updateuser = function(req, res, next){
-
- var id = req.body.id;
-  var email = req.body.email;
-  var phone = req.body.phone;
-  var address = req.body.address;
+var user = req.body.user;
+console.log("name1");
+var id = req.body.id;
+var name = req.body.name;
+var email = req.body.email;
+var phone = req.body.phone;
+var address = req.body.address;
+console.log("name2");
+console.log("name");
 
   User.findById(id, function(err, user){
-   if(err) return next(err);
-   user.name = name;
-   user.email = email;
-   user.phone = phone;
-   user.address = address;
+//if(err) return next(err);
+   if(err){
+     console.log("got1");
+     res.send(400,{user:'error looking user'});
+     return next();
+   }else if(!user){
+     console.log("got2");
+      res.send(400,{user:'invalid user'});
+      return next();
+   }else{
+     user.name = name;
+      user.email = email;
+      user.phone = phone;
+      user.address = address;
+     user.save(function(err, user){
+       if(err){
+         console.log("got3");
+         res.send(400,{user:'updating error'});
+         return next();
+       }
+       else if(user){
+       console.log(name);
+         res.send(200,{user: user});
+         return next();
+       }
+       });
+   }
 
-
-   user.save(function(err, user){
-     if(err) next(err);
-       res.send(200,{user: user});
-       return next();
-     });
    });
 }
 
@@ -178,20 +198,20 @@ var email = req.params.email;
 console.log(email);
 User.findOne({'email':email}, function(err, user){
   if(err){
-    res.send('Error looking up for email');
+    res.send(400,{user:'Error looking up for email'});
     return next();
   } else if(user) {
     mail.sendMail(user.email, 0, user.name, user.id, function(result){
         if(result == 1){
-          res.send('Error sending mail');
+          res.send(400,{user:'Error sending mail'});
           return next();
         } else {
-        res.send('Mail Sent');
+        res.send(200,{user:'Mail Sent'});
         return next();
       }
       });
   } else {
-    res.send('No user found');
+    res.send(400,{user:'No user found'});
     return next();
   }
 })
@@ -205,18 +225,17 @@ exports.sendPasswordFile = function(req, res, next) {
   User.findById(id,function(err, user){
     if(user != null && user != ""){
     console.log(link);
-  /*  app.get('/',function(req, res){
-  res.sendFile(path.join(__dirname+'/index.html'));
-});*/
-    //res.sendFile(path.resolve(__dirname, '../views', 'index.html'));
+  //  app.get('/',function(req, res){
+//  res.sendFile(path.join(__dirname+'/index.html'));
+//res.sendfile(200, {user:'index.html'});
+//});
+   res.sendFile(200,{user: path.resolve(__dirname, '../views', 'index.html')});
     console.log("got1");
-    //res.sendfile(path.join(__dirname + '../views/index.html'));
+    //res.sendFile(200, {user: path.join(__dirname + '../views/index.html')});
     //res.sendfile('views/index1.html');
     // res.sendFile('index.html', { root: path.join(__dirname, '../views') });
-     res.sendFile('views/index.html' , { root : __dirname});
-    //res.sendfile(__dirname + '/index.html');
-    console.log("got2");
-    console.log(user);
+     //res.sendFile(200,{user:'views/index.html' ,  root : __dirname});
+    //res.sendfile(200, {user: __dirname + '/index.html'});
     console.log("sendfile");
     return next();
   }

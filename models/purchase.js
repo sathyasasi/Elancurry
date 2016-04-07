@@ -1,15 +1,14 @@
 var mongoose = require('mongoose');
 
-
-var category = ["Mutton","Chicken","Fish"];
 var deliveryStatus = ["Success","Failed" ];
 var oderStatus = ["Odered","Cancel"];
 
 var userpurchaseSchema = new mongoose.Schema({
-  curryType : {type: String,enum:category},
-  curryName:{type: String},
-  Buyquantity  : {type: Number},
-  Totalprice    : {type: Number},
+
+  itemName:{type: String},
+  quantity: {type: Number},
+  cost: {type: Number},
+  Total: {type: Number},
   oderRequestdate  : {type: Date, default: Date.now },
   oderResponsedate : {type: Date},
   oderStatus : {type: String,enum:oderStatus},
@@ -18,16 +17,8 @@ var userpurchaseSchema = new mongoose.Schema({
 var purchaseSchema = new mongoose.Schema({
   customerName : {type: String},
   phone : {type: Number},
-  deliveryAddress:
-  {
-    doorNo  : {type: String},
-    street  : {type: String},
-    city    : {type: String},
-    state   : {type: String},
-    pincode : {type: Number}
-  },
+  deliveryAddress: {type: String},
   userpurchase : [userpurchaseSchema]
-//  mongoose.plugin(require('mongoose-list'));
 },{collection: 'purchase'});
 
 
