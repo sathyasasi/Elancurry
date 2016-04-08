@@ -214,7 +214,7 @@ User.findOne({'email':email}, function(err, user){
     res.send(400,{user:'No user found'});
     return next();
   }
-})
+});
 
 }
 
