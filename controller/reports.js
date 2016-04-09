@@ -52,33 +52,45 @@ Purchase.findById(id,function(err,purchase){
 
 
 //purchase history
-/*exports.viewdatelist = function(req, res, next){
- var purchaseid = req.body.purchaseid;
- var userpurchaseid = req.body.userpurchaseid;
- console.log(purchaseid);
- console.log(userpurchaseid);
+exports.viewdatelist = function(req, res, next){
+ var date = req.body.date;
+ //var userpurchaseid = req.body.userpurchaseid;
+ console.log(date);
+ //console.log(userpurchaseid);
  Purchase.aggregate([
    {
      $match :
      {
-     "purchaseid" : purchaseid,
-     "userpurchaseid" : userpurchaseid
+     "date" : date
+     //"userpurchaseid" : userpurchaseid
    }
    },
+   /*{
+     $unwind: "$userpurchase",
+   },
    {
-     $limit: 1
+      $project: {
+        "purchaseid": "$_id",
+        "userpurchaseid": "$userpurchase._id",
+        "curryName": "$userpurchase.curryName",
+        "curryType": "$userpurchase.curryType",
+        "Buyquantity": "$userpurchase.Buyquantity",
+        "amount": "$userpurchase.amount",
+        "oderRequestdate": "$userpurchase.oderRequestdate"
+      }
+    },*/
+   {
+     $limit: 20
    },
    {$sort :{
      'oderRequestdate': -1
     }}],function(err, purchase){
-   console.log("purchase"+  purchaseid);
-   console.log(userpurchaseid);
  if(err) return next(err);
 if(purchase)
  //if(purchase != '' && purchase != null)
  {
    console.log(purchase);
-   res.send(200,{purchase: purchase});
+   res.send(200,{ purchase});
    console.log("purchase detail found");
  }
  else {
@@ -86,11 +98,11 @@ if(purchase)
    console.log("purchase details not found");
  }
 });
-}*/
+}
 
 
 
-exports.viewdatelist = function(req,res,next){
+/*exports.viewdatelist = function(req,res,next){
 var purchaseid = req.body.purchaseid;
 console.log("purchaseid");
 //var commodityId = req.body.commodity;
@@ -98,7 +110,7 @@ console.log("purchaseid");
 Purchase.find({
   'purchaseid':purchaseid,
 //  'commodityId':commodityId
-}, '_id customerName phone deliveryAddress userpurchase.curryType userpurchase.curryName userpurchase.Buyquantity userpurchase.Totalprice userpurchase.oderRequestdate userpurchase.oderResponsedate userpurchase.oderStatus userpurchase.deliveryStatus',
+}, 'purchaseid customerName phone deliveryAddress userpurchase',
 {
   limit: 10,
   sort:{
@@ -112,11 +124,12 @@ Purchase.find({
     res.send(400,{purchase:'No purchase found'});
     return next();
   } else {
-    //console.log(userpurchase());
+    console.log("got1");
     //res.send(JSON.stringify(purchase));
     res.send(200,{purchase: purchase});
+    //res.send(purchase);
     return next();
   }
 });
 
-}
+}*/

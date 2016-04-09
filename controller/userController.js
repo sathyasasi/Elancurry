@@ -202,11 +202,11 @@ User.findOne({'email':email}, function(err, user){
     return next();
   } else if(user) {
     mail.sendMail(user.email, 0, user.name, user._id, function(result){
-        if(result == 1){
-          res.send(400,{user:'Error sending mail'});
+        if(result !== 1){
+          res.send(200,{user:'Mail send'});
           return next();
         } else {
-        res.send(200,{user:'Mail Sent'});
+        res.send(400,{user:'Error sending mail'});
         return next();
       }
       });
@@ -220,22 +220,16 @@ User.findOne({'email':email}, function(err, user){
 
 //sending the password file
 exports.sendPasswordFile = function(req, res, next) {
+  debugger;
   var id = req.params.id;
-  var link = "http://127.0.0.1:52320/api/user/forgotpassword/"+id;
+  var link = "http://127.0.0.1:52320/api/user/sendfile"+id;
   User.findById(id,function(err, user){
     if(user != null && user != ""){
     console.log(link);
-  //  app.get('/',function(req, res){
-//  res.sendFile(path.join(__dirname+'/index.html'));
-//res.sendfile(200, {user:'index.html'});
-//});
-   res.sendFile(200,{user: path.resolve(__dirname, '../views', 'index.html')});
-    console.log("got1");
-    //res.sendFile(200, {user: path.join(__dirname + '../views/index.html')});
-    //res.sendfile('views/index1.html');
-    // res.sendFile('index.html', { root: path.join(__dirname, '../views') });
-     //res.sendFile(200,{user:'views/index.html' ,  root : __dirname});
-    //res.sendfile(200, {user: __dirname + '/index.html'});
+      res.sendFile(200,{user: path.join(__dirname, '../views', 'index.html')});
+
+   //res.sendFile(200,{user: path.resolve(__dirname, '../views', 'index.html')});
+
     console.log("sendfile");
     return next();
   }
