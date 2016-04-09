@@ -202,15 +202,17 @@ User.findOne({'email':email}, function(err, user){
     return next();
   } else if(user) {
     mail.sendMail(user.email, 0, user.name, user._id, function(result){
-        if(result !== 1){
-          res.send(200,{user:'Mail send'});
+        if(result == 1){
+          res.send(400,{user:'Error sending mail'});
           return next();
-        } else {
-        res.send(400,{user:'Error sending mail'});
+        }
+        else {
+        res.send(200,{user:'MailSent'});
         return next();
       }
       });
-  } else {
+  }
+  else {
     res.send(400,{user:'No user found'});
     return next();
   }
