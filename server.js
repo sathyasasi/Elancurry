@@ -64,7 +64,7 @@ app.on('after', function (req, res, route, error) {
   req.log.debug("%d %s", res.statusCode, res._data ? res._data.length : null);
 });
 
-app.get('/views', function (req, res, next) {
+app.get('/restify', function (req, res, next) {
   require('fs').sendFile(__dirname + '/views/index.html', function (err, data) {
     if (err) {
       next(err);

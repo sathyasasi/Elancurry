@@ -53,15 +53,15 @@ Purchase.findById(id,function(err,purchase){
 
 //purchase history
 exports.viewdatelist = function(req, res, next){
- var date = req.body.date;
+ var purchaseid = req.body.purchaseid;
  //var userpurchaseid = req.body.userpurchaseid;
- console.log(date);
+ console.log(purchaseid);
  //console.log(userpurchaseid);
  Purchase.aggregate([
    {
      $match :
      {
-     "date" : date
+     "purchaseid" : purchaseid
      //"userpurchaseid" : userpurchaseid
    }
    },
@@ -80,7 +80,7 @@ exports.viewdatelist = function(req, res, next){
       }
     },*/
    {
-     $limit: 20
+     $limit: 2
    },
    {$sort :{
      'oderRequestdate': -1
@@ -90,7 +90,7 @@ if(purchase)
  //if(purchase != '' && purchase != null)
  {
    console.log(purchase);
-   res.send(200,{ purchase});
+   res.send(200,{ purchase: purchase});
    console.log("purchase detail found");
  }
  else {

@@ -58,13 +58,12 @@ if(typeof registeringUser.email == 'undefined' || registeringUser.email == ''){
               return next();
             }
             if(loggedInUser){
-              loggedInUser.save(function(err, user){
+              loggedInUser.createSession(function(err, user){
                 if(err){
                   res.send(400,{user:'error logging in user'});
                   return next();
                 } else if(user){
-                  //user.password = '';
-                  //user.updatedAt = '';
+                  user.password = '';
                   JSON.stringify(user);
                   res.send(200,{user: user});
                   //res.send(new Response.respondWithData(user));
@@ -115,7 +114,7 @@ if(typeof user.password == 'undefined' || user.password == ''){
           res.send(400,{user:'Password is wrong'});
           return next();
         } else {
-        user.save(function(err, user){
+        user.createSession(function(err, user){
           if(err){
             res.send(400,{user:'error logging in user'});
             return next();
@@ -147,48 +146,54 @@ exports.viewProfile = function(req, res, next){
 
  });
 }
+
 //update user details
-exports.updateuser = function(req, res, next){
-var user = req.body.user;
-console.log("name1");
-var id = req.body.id;
-var name = req.body.name;
-var email = req.body.email;
-var phone = req.body.phone;
-var address = req.body.address;
-console.log("name2");
-console.log("name");
+/*exports.updateuser = function(req, res, next){
+  var user = req.user;
+  var data = req.body.user;
 
-  User.findById(id, function(err, user){
-//if(err) return next(err);
-   if(err){
-     console.log("got1");
-     res.send(400,{user:'error looking user'});
-     return next();
-   }else if(!user){
-     console.log("got2");
-      res.send(400,{user:'invalid user'});
+  user.name = data.name;
+  user.email = data.email;
+  user.phone = data.phone;
+  user.address = data.address;
+  user.updatedAt = new Date();
+
+  user.name = name;
+  user.email = email;
+  user.phone = phone;
+  user.address = address;
+  user.updatedAt = updateAt;
+  user.save(function(err, user){
+    if(err){
+      res.send(400,{user:'error updating user profile'});
       return next();
-   }else{
-     user.name = name;
-      user.email = email;
-      user.phone = phone;
-      user.address = address;
-     user.save(function(err, user){
-       if(err){
-         console.log("got3");
-         res.send(400,{user:'updating error'});
-         return next();
-       }
-       else if(user){
-       console.log(name);
-         res.send(200,{user: user});
-         return next();
-       }
-       });
-   }
+    } else {
 
-   });
+      res.send(200,{user: user});
+      return next();
+    }
+  });
+}*/
+
+exports.updateuser = function(req, res, next){
+  var user = req.body.user;
+  var id = req.body.id;
+  var name = req.body.name;
+  var email = req.body.email;
+  var phone = req.body.phone;
+  var address = req.body.address;
+  User.findById(id, function(err, user){
+    if(err) return next(err);
+    user.name = name;
+    user.email = email;
+    user.phone = phone;
+    user.address = address;
+    user.save(function(err, user){
+      if(err) next(err);
+      res.send(200, {user: user});
+      return next();
+    });
+  });
 }
 
 
@@ -228,7 +233,8 @@ exports.sendPasswordFile = function(req, res, next) {
   User.findById(id,function(err, user){
     if(user != null && user != ""){
     console.log(link);
-      res.sendFile(200,{user: path.join(__dirname, '../views', 'index.html')});
+      res.send(200,{user:path.join(__dirname, '../views', 'index.html')});
+      //res.send(200,{user:'index.html',root: path.join(__dirname, '../views')});
 
    //res.sendFile(200,{user: path.resolve(__dirname, '../views', 'index.html')});
 
