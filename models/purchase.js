@@ -8,16 +8,15 @@ var userpurchaseSchema = new mongoose.Schema({
   itemName:{type: String},
   quantity: {type: Number},
   cost: {type: Number},
-  Total: {type: Number},
   oderRequestdate  : {type: Date, default: Date.now },
   oderResponsedate : {type: Date},
   oderStatus : {type: String,enum:oderStatus},
   deliveredStatus : {type: String,enum:deliveryStatus},
 });
 var purchaseSchema = new mongoose.Schema({
-  customerName : {type: String},
-  phone : {type: Number},
+  customerId:{ type: mongoose.Schema.Types.ObjectId,ref:'user'},
   deliveryAddress: {type: String},
+  Total: {type: Number},
   userpurchase : [userpurchaseSchema]
 },{collection: 'purchase'});
 

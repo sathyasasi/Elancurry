@@ -5,6 +5,7 @@ var restify = require('restify');
 var bunyan = require('bunyan');
 var loadash = require('lodash');
 var Purchase = require('../models/purchase.js');
+var User = require('../models/user.js');
 var Response = require('../helpers/response.js');
 var error = require('../helpers/errors.js');
 var common = require('../helpers/common.js');
@@ -14,23 +15,16 @@ var mail = require('../helpers/mail.js');
 //adding sales details
 exports.addpurchase = function(req, res, next){
 var purchase = new Purchase(req.body);
-var phone = req.body.phone;
-
-   Purchase.find({"phone": phone}, function(err, menu){
-    if(menu != null && menu != ""){
-       if(err) return next(err);
-    res.send(400,{purchase:'already exists phone number'});
-    }
-else{
   purchase.save(function(err, purchase) {
   console.log("sales details added");
    res.send(200,{purchase: purchase});
    console.log(purchase);
   return next();
  });
+
 }
- });
-}
+
+
 
 //View Individual purchase record
 exports.viewuserPurchase = function(req, res, next){
@@ -52,54 +46,47 @@ Purchase.findById(id,function(err,purchase){
 
 
 //purchase history
-exports.viewdatelist = function(req, res, next){
- var purchaseid = req.body.purchaseid;
- //var userpurchaseid = req.body.userpurchaseid;
- console.log(purchaseid);
- //console.log(userpurchaseid);
- Purchase.aggregate([
-   {
-     $match :
-     {
-     "purchaseid" : purchaseid
-     //"userpurchaseid" : userpurchaseid
-   }
-   },
-   /*{
-     $unwind: "$userpurchase",
-   },
-   {
-      $project: {
-        "purchaseid": "$_id",
-        "userpurchaseid": "$userpurchase._id",
-        "curryName": "$userpurchase.curryName",
-        "curryType": "$userpurchase.curryType",
-        "Buyquantity": "$userpurchase.Buyquantity",
-        "amount": "$userpurchase.amount",
-        "oderRequestdate": "$userpurchase.oderRequestdate"
-      }
-    },*/
-   {
-     $limit: 2
-   },
-   {$sort :{
-     'oderRequestdate': -1
-    }}],function(err, purchase){
- if(err) return next(err);
-if(purchase)
- //if(purchase != '' && purchase != null)
- {
-   console.log(purchase);
-   res.send(200,{ purchase: purchase});
-   console.log("purchase detail found");
- }
- else {
-   res.send(400,{purchase:'purchase details not found'});
-   console.log("purchase details not found");
- }
-});
-}
+exports.purchaselist = function(req, res, next){
+  var purchaseid = req.body.purchaseid;
+  var customerId = req.body.customerId;
+  var userpurchaseid = req.body.userpurchaseid;
+  var Total = req.body.Total;
 
+  Purchase.aggregate([
+    /*{
+        $match:
+        {
+          "_id":purchaseid,
+          "customerId":customerId
+        }
+      },*/
+    {
+      $unwind:"$userpurchase"
+    }
+  /*  {
+      $group:{
+        "_id":"$userpurchaseid",
+        Total:{
+          "$sum": "$userpurchase.cost"}
+      }
+    }
+    {
+      $project:{
+        "userpurchase": "$userpurchase",
+        "Total":"$Total"
+      }
+    }*/
+  ], function(err, purchase){
+    if(err){
+      res.send(400,{purchase: 'error looking up purchase'});
+    }
+    else{
+      console.log(customerId);
+      res.send(200,{purchase: purchase});
+    }
+});
+
+}
 
 
 /*exports.viewdatelist = function(req,res,next){

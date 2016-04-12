@@ -26,5 +26,5 @@ app.del('/api/deletemenu/:id',menu.deletemenu);
 
 app.post('/api/addpurchase',reports.addpurchase);
 app.get('/api/user/purchase/:id',reports.viewuserPurchase);
-app.post('/api/viewdatelist',reports.viewdatelist);
+app.post('/api/viewdatelist',reports.purchaselist);
 }

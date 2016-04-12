@@ -108,7 +108,7 @@ if(typeof user.password == 'undefined' || user.password == ''){
       res.send(400,{user:'No user exists'});
       return next();
     } else if(user){
-          //var existing = common.decrypt(user.password);
+        //  var existing = common.decrypt(user.password);
           if (password !== user.password) {
               console.log(Response.statusCode);
           res.send(400,{user:'Password is wrong'});
@@ -157,18 +157,11 @@ exports.viewProfile = function(req, res, next){
   user.phone = data.phone;
   user.address = data.address;
   user.updatedAt = new Date();
-
-  user.name = name;
-  user.email = email;
-  user.phone = phone;
-  user.address = address;
-  user.updatedAt = updateAt;
   user.save(function(err, user){
     if(err){
       res.send(400,{user:'error updating user profile'});
       return next();
     } else {
-
       res.send(200,{user: user});
       return next();
     }
