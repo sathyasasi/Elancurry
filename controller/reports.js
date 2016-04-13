@@ -49,74 +49,23 @@ Purchase.findById(id,function(err,purchase){
 exports.purchaselist = function(req, res, next){
   var purchaseid = req.body.purchaseid;
   var customerId = req.body.customerId;
-  var userpurchaseid = req.body.userpurchaseid;
-  var Total = req.body.Total;
+
 
   Purchase.aggregate([
-    /*{
-        $match:
-        {
-          "_id":purchaseid,
-          "customerId":customerId
-        }
-      },*/
-    {
+  {
       $unwind:"$userpurchase"
     }
-  /*  {
-      $group:{
-        "_id":"$userpurchaseid",
-        Total:{
-          "$sum": "$userpurchase.cost"}
-      }
-    }
-    {
-      $project:{
-        "userpurchase": "$userpurchase",
-        "Total":"$Total"
-      }
-    }*/
+
   ], function(err, purchase){
     if(err){
       res.send(400,{purchase: 'error looking up purchase'});
     }
-    else{
-      console.log(customerId);
-      res.send(200,{purchase: purchase});
-    }
-});
-
+else
+{
+  res.send(200,{purchase: purchase});
 }
 
 
-/*exports.viewdatelist = function(req,res,next){
-var purchaseid = req.body.purchaseid;
-console.log("purchaseid");
-//var commodityId = req.body.commodity;
-
-Purchase.find({
-  'purchaseid':purchaseid,
-//  'commodityId':commodityId
-}, 'purchaseid customerName phone deliveryAddress userpurchase',
-{
-  limit: 10,
-  sort:{
-        'oderRequestdate': -1 //Sort by Date Added DESC
-    }
-}, function(err, purchase){
-  if(err){
-    res.send(400,{purchase:'error looking up for purchase history'});
-    return next();
-  } else if(!purchase){
-    res.send(400,{purchase:'No purchase found'});
-    return next();
-  } else {
-    console.log("got1");
-    //res.send(JSON.stringify(purchase));
-    res.send(200,{purchase: purchase});
-    //res.send(purchase);
-    return next();
-  }
 });
 
-}*/
+}
